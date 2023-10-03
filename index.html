@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300&display=swap" rel="stylesheet">
+    <title>BudgetApp</title>
+</head>
+<body>
+    <div class="container">
+       
+        <div class="section1">
+            <div class="budget-form">
+                <div class="head">
+                    <h1 class="title">EXPENSE TRACKER</h1>
+                    <button class="reset-value">Reset value</button>
+                </div>
+                <form action="#" id="form1">
+                    <label for="">Please Enter Your Budget</label>
+                    <p class="error"> value cannot be empty, negative or zero</p> 
+                    <input type="number" id="budget-amount">
+                    <button class="add-budget">Calculate</button>
+                </form>
+
+
+                <div class="expense-form">
+                    <form action="#" id="form2">
+                        <label for="">Please Enter Your Expense</label>
+                        <p class="error"> value cannot be empty and can not contain numbers</p> 
+                        <input type="text" id="expense-name">
+                        <label for="#">Please Enter Expense Amount</label>
+                        <p class="error"> value cannot be empty, negative or zero</p> 
+                        <input type="number" id="expense-amount">
+                        <button id="expense-add">Add expense</button>
+                    </form>
+                </div>
+            </div>
+
+            <div>
+                <div class="feedback">
+                    <div class="feedback-item">
+                        <h2 class="feedback-item-title">BUDGET</h2>
+                        <span class="feedback-item-image"><i class="fa-solid fa-money-bill"></i></span>
+                        <p class="feedback-item_budget_amount green"><span class="feedback-item_budget_show">0 </span> F</p>  
+                    </div>
+                    <div class="feedback-item">
+                        <h2 class="feedback-item-title">EXPENSES</h2>
+                        <span class="feedback-item-image"><i class="fa-solid fa-credit-card"></i></span>
+                        <p class="feedback-item_budget_amount red"><span class="feedback-item_expense_show">0 </span> F</p>  
+                    </div>
+                    <div class="feedback-item">
+                        <h2 class="feedback-item-title">BALANCE</h2>
+                        <span class="feedback-item-image"><i class="fa-solid fa-dollar"></i></span>
+                        <p class="feedback-item_budget_amount green"><span class="feedback-item_balance_show">0 </span> F</p>
+                        <div class="border-bottom"></div>  
+                    </div>
+                </div>
+                
+
+                <div class="expense-feedback">
+                    <table>
+                        <thead>
+                                <th class="expense-title">Expense Title</th>
+                                <th class="expense-value">Expense Value</th>
+                                <th><i class="fa-solid fa-gear"></i></th>
+                                <th class="delete-edit"></th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
+    
+                    <template id="expense-row">
+                        <tr>
+                            <td class="expense-value" style="display: none;"></td>
+                            <td class="expense-title"></td>
+                            <td class="expense-value"></td>
+                            <td class="delete-edit">
+                                <span><i class="fa-solid fa-edit" id="edit-row"></i></span>
+                                <span><i class="fa-solid fa-trash" id="delete-row"></i></span>
+                            </td>
+                        </tr>
+                    </template>
+    
+                </div>
+            </div>
+            <div class="history">
+                <button class="btn-history">History</button>
+               
+                    <canvas id="myChart" style="width: 400px;"></canvas>
+              
+                <table class="alert">
+                    <tr>
+                        <td class="error-text1">Ajout de budget</td>
+                    </tr>
+                    <tr>
+                        <td class="error-text2">Votre budget a été ajouté avec success</td>
+                    </tr>
+                </table>
+                
+                <table class="alert">
+                    <tr>
+                        <td class="error-text1">Ajout de la depense</td>
+                    </tr>
+                    <tr>
+                        <td class="error-text2">Votre depense a été ajouté avec success</td>
+                    </tr>
+                </table>
+
+                <table class="alert">
+                    <tr>
+                        <td class="error-text1">Mise à jour de la depense</td>
+                    </tr>
+                    <tr>
+                        <td class="error-text2">Votre depense a été mise à jour</td>
+                    </tr>
+                </table>
+            </div>
+             
+        </div>
+      <!--   <div class="section2">
+            
+
+        </div> -->
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
