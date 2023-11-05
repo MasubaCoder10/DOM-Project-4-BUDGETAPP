@@ -17,7 +17,7 @@
             <div class="budget-form">
                 <div class="head">
                     <h1 class="title">EXPENSE TRACKER</h1>
-                    <button class="reset-value">Reset value</button>
+                    <button id="btn-clear" class="reset-value" >Reset value</button>
                 </div>
                 <form action="#" id="form1">
                     <label for="">Please Enter Your Budget</label>
@@ -36,6 +36,7 @@
                         <p class="error"> value cannot be empty, negative or zero</p> 
                         <input type="number" id="expense-amount">
                         <button id="expense-add">Add expense</button>
+                        <button id="expense-update">Update expense</button>
                     </form>
                 </div>
             </div>
@@ -64,6 +65,7 @@
                 <div class="expense-feedback">
                     <table>
                         <thead>
+                            <tr>
                                 <th class="expense-title">Expense Title</th>
                                 <th class="expense-value">Expense Value</th>
                                 <th><i class="fa-solid fa-gear"></i></th>
@@ -71,56 +73,65 @@
                                 
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="tbody">
                             
                         </tbody>
                     </table>
-    
-                    <template id="expense-row">
-                        <tr>
-                            <td class="expense-value" style="display: none;"></td>
-                            <td class="expense-title"></td>
-                            <td class="expense-value"></td>
-                            <td class="delete-edit">
-                                <span><i class="fa-solid fa-edit" id="edit-row"></i></span>
-                                <span><i class="fa-solid fa-trash" id="delete-row"></i></span>
-                            </td>
-                        </tr>
-                    </template>
-    
                 </div>
             </div>
-            <div class="history">
-                <button class="btn-history">History</button>
-               
-                    <canvas id="myChart" style="width: 400px;"></canvas>
-              
-                <table class="alert">
-                    <tr>
-                        <td class="error-text1">Ajout de budget</td>
-                    </tr>
-                    <tr>
-                        <td class="error-text2">Votre budget a été ajouté avec success</td>
-                    </tr>
-                </table>
-                
-                <table class="alert">
-                    <tr>
-                        <td class="error-text1">Ajout de la depense</td>
-                    </tr>
-                    <tr>
-                        <td class="error-text2">Votre depense a été ajouté avec success</td>
-                    </tr>
-                </table>
-
-                <table class="alert">
-                    <tr>
-                        <td class="error-text1">Mise à jour de la depense</td>
-                    </tr>
-                    <tr>
-                        <td class="error-text2">Votre depense a été mise à jour</td>
-                    </tr>
-                </table>
+            
+            <div class="allHistory">
+                <div class="history">
+                    <button class="btn-history" >History</button>
+                   
+                    <table>
+                        <thead>
+                            <tr>
+                                <th >#</th>
+                                <th class="expense-title" >expense title</th>
+                                <th class="expense-value" > expense amount</th>
+                            </tr>
+                        </thead>
+                        <tbody  id="tbodyHistory">
+                            <!-- <tr>
+                                <td>1</td>
+                                <td>sucre</td>
+                                <td>200</td>
+                            </tr>  -->
+                        </tbody>
+                        
+                       
+                    </table>
+                    <hr style=" margin: 1rem;">
+                        <div style="display: flex; justify-content: center; width: 400px; height: 300px;" ><canvas id="myChart" ></canvas></div>
+                  
+                    <table class="alert">
+                        <tr>
+                            <td class="error-text1">Ajout de budget</td>
+                        </tr>
+                        <tr>
+                            <td class="error-text2">Votre budget a été ajouté avec success</td>
+                        </tr>
+                    </table>
+                    
+                    <table class="alert">
+                        <tr>
+                            <td class="error-text1">Ajout de la depense</td>
+                        </tr>
+                        <tr>
+                            <td class="error-text2">Votre depense a été ajouté avec success</td>
+                        </tr>
+                    </table>
+    
+                    <table class="alert">
+                        <tr>
+                            <td class="error-text1">Mise à jour de la depense</td>
+                        </tr>
+                        <tr>
+                            <td class="error-text2">Votre depense a été mise à jour</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
              
         </div>
