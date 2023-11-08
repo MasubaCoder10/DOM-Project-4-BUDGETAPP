@@ -38,8 +38,8 @@ button.reset-value:hover{
     background-color: rgb(255, 200, 0);
     color: black;
 }
-h1{
-    font-size: 3.5rem;
+h3{
+    font-size: 2rem;
     line-height: 10rem;
 }
 h2{
@@ -132,6 +132,9 @@ input:focus{
     display: flex;
     justify-content: center;
     
+}
+.historyTable{
+    display: none;
 }
 .btn-history{
     
@@ -303,4 +306,5 @@ tbody td
     text-align: center;
     border: 0.5px solid #154817;
 }
+
 

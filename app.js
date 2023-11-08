@@ -1,7 +1,3 @@
-let arrayLabels = [];
-let arrayData = [];
-let arrColor = [];
-
 let totalBudget = 0;
 let totalBalance = 0;
 let totalExpense = 0;
@@ -10,20 +6,7 @@ let arrayExpense = [];
 const expenseListLabel = "arrayExpense";
 let id = 0;
 let checked = null;
-// arrayLabels
-if (!localStorage.getItem("arrayLabels")) {
-  localStorage.setItem("arrayLabels", JSON.stringify(arrayLabels));
-}
-if (!localStorage.getItem("arrayData")) {
-  localStorage.setItem("arrayData", JSON.stringify(arrayData));
-}
-function updateDataChart() {
-  localStorage.setItem("arrayLabels", JSON.stringify(arrayLabels));
-  localStorage.setItem("arrayData", JSON.stringify(arrayData));
-}
-arrayLabels = JSON.parse(localStorage.getItem("arrayLabels"));
-arrayData = JSON.parse(localStorage.getItem("arrayData"));
-console.log(arrayLabels, arrayData);
+
 //local storage pour obtenir les element du Budget
 if (JSON.parse(localStorage.getItem("addBudget"))) {
   totalBudget = JSON.parse(localStorage.getItem("addBudget"));
@@ -66,6 +49,7 @@ class BudgetApp {
     this.expense_update = document.querySelector("#expense-update");
     this.history_table = document.querySelector(".history-items");
     this.tbodyHistory = document.querySelector("#tbodyHistory");
+    this.historyTable = document.querySelector(".historyTable")
   }
 
   clear_locaStorage() {
@@ -75,8 +59,8 @@ class BudgetApp {
 
   add_budget() {
     if (isNaN(this.budget_amount.value) || this.budget_amount.value <= 0) {
+      this.budget_amount.value = ""
       this.errors[0].classList.add("error-show");
-      this.budget_amount.value = "";
       setTimeout(() => {
         this.errors[0].classList.remove("error-show");
       }, 3000);
@@ -89,18 +73,13 @@ class BudgetApp {
       // local Storage setItem balance
       totalBalance = totalBudget;
       localStorage.setItem("balance", JSON.stringify(totalBalance));
-
-      this.alerts[0].classList.add("alert-show");
-
-      setTimeout(() => {
-        this.alerts[0].classList.remove("alert-show");
-      }, 3000);
       this.showBudget.innerHTML = totalBudget;
       this.showBlance.innerText = totalBalance;
       this.budget_amount.value = "";
-      this.errors[3].classList.add("error-show");
+
+      this.alerts[0].classList.add("alert-show");
       setTimeout(() => {
-        this.errors[3].classList.remove("error-show");
+        this.alerts[0].classList.remove("alert-show");
       }, 3000);
     }
   }
@@ -110,6 +89,7 @@ class BudgetApp {
     this.showBudget.innerHTML = "";
     this.showBlance.innerText = "";
     this.tbody.innerHTML = "";
+            
     let total = 0;
     arrayExpense.forEach((item, index) => {
       total += parseInt(item.price);
@@ -124,29 +104,20 @@ class BudgetApp {
                         <span><i class="fa-solid fa-trash" id="delete-row" onclick="deleteExpense(${index})"></i></span>
                     </td>
                 </tr>
-            `;
-      
+            `;     
     });
     // add item in my page
     this.showExpense.innerHTML = total;
     this.showBudget.innerHTML = totalBudget;
     this.showBlance.innerText = totalBudget - total;
-
-    /* this.clone = this.expense_row.content.cloneNode(true)
-        let td = this.clone.querySelectorAll('td')
-        td[0].innerText = this.expense_name.value;
-        td[1].innerText = this.expense_amount.value;
-        this.tbody.appendChild(this.clone);
-        let expense = {
-            name : this.expense_name.value,
-            prix: this.expense_amount.value,
-        } */
   }
+
   getExpenseTolocaStorageHistory(arrayExpense){
+    this.tbodyHistory.innerHTML =""
     arrayExpense.forEach((item, index) => {
       this.tbodyHistory.innerHTML += `
                 <tr id="tr">
-                <td >00</td>
+                <td >${item.count}</td>
                     <td class="expense-title">${item.name}</td>
                     <td class="expense-value">${item.price}</td>
                     
@@ -157,6 +128,7 @@ class BudgetApp {
   }
 
   expense_add() {
+    console.log("yes");
     if (+this.showBlance.innerHTML <= 0) {
       this.errors[1].classList.add("error-show");
       setTimeout(() => {
@@ -165,7 +137,7 @@ class BudgetApp {
       this.expense_name.value = "";
       this.expense_amount.value = "";
     } else {
-      if (this.expense_name.value == "" || /\d/.test(this.expense_name.value)) {
+      if (this.expense_name.value ==="" || /\d/.test(this.expense_name.value)) {
         this.errors[1].classList.add("error-show");
         this.expense_name.value = "";
 
@@ -184,68 +156,63 @@ class BudgetApp {
         }, 3000);
       } else {
         let isFirstFind = false;
-        if (checked != null  ) { 
-           arrayExpense = arrayExpense.map((el, i) => {
-            if (i === checked ) { 
-            checked = null;
-            return {
-             ...el,
-             name: this.expense_name.value,
-             price: this.expense_amount.value,
-           } ;
-          }
-       
-       return el;
-       });
-     }
+        if (checked !== null  ) { 
+            //
+            let existName = null;
+            arrayExpense.forEach((el, j) =>{
+              if(checked !== j && el.name === this.expense_name.value){
+                existName = j
+              }
+            })       
+            if(existName !== null ){
+              arrayExpense = arrayExpense.map((el, i) => {
+                console.log('checked', checked);
+                if (i === existName ) { 
+                  return {
+                    ...el,
+                    count: el.count +1,
+                    name: this.expense_name.value,
+                    price: +el.price + +this.expense_amount.value,
+                  } ;
+                }
     
-
-            /* if(i === checked && el.name === this.expense_name.value){
-              console.log("yo");
+                return el;
+              });
+              console.log("avant",arrayExpense);
+              arrayExpense.splice(checked, 1)
+              console.log("after",arrayExpense);
               checked = null;
-              arrayExpense = arrayExpense.map((el, index) => {
-              if (el.name === this.expense_name.value && !isFirstFind) {
-                  el.price = +el.price + parseInt(this.expense_amount.value);
-                  isFirstFind = true;
-                  //call  the deleting function
-                  deleteExpense(index);
-                  //call  the deleting function
-                  localStorage.setItem("arrayData", JSON.stringify(arrayData));
+            }else{
+              arrayExpense = arrayExpense.map((el, i) => {
+                if (i === checked ) { 
+                  checked = null;
+                  return {
+                    ...el,
+                    count: el.count +1,
+                    name: this.expense_name.value,
+                    price: this.expense_amount.value,
+                  } ;
+                }
+    
+                return el;
+              });
             }
-            return el;
-          });
-           } */
-            
-          
-            /* else if (i === checked && el.name !== this.expense_name.value) {                                                
-              checked = null;
-               return {
-                ...el,
-                name: this.expense_name.value,
-                price: this.expense_amount.value,
-              } ;
-              
+      
 
-             
-            }
-            return el;
-          });  
-        }*/ else {
+     }
+      
+         else {
           //pour eviter les doublons dans le tableau
           arrayExpense = arrayExpense.map((el) => {
             if (el.name === this.expense_name.value && !isFirstFind) {
               el.price = +el.price + parseInt(this.expense_amount.value);
+              el.count +=1; 
               isFirstFind = true;
-              localStorage.setItem("arrayData", JSON.stringify(arrayData));
+              localStorage.setItem(expenseListLabel, JSON.stringify(arrayExpense));
             }
             return el;
           });
-          // push item in chartjs
-          /* arrayLabels.push(this.expense_name.value);
-          arrayData.push(parseInt(this.expense_amount.value));
-          console.log(arrayData); */
-          arrColor.push(color());
-          //
+       
 
           // local Storage setItem expense
           totalExpense += parseInt(this.expense_amount.value);
@@ -257,40 +224,23 @@ class BudgetApp {
           if (!isFirstFind) {
             // object to add in my arrayExpense
             const depense = {
-              id: id++,
+              count: 1,
               name: this.expense_name.value,
               price: this.expense_amount.value,
             };
             //add item in global arrayExpense
             arrayExpense.push(depense);
-            arrayLabels.push(depense.name);
-            arrayData.push(parseInt(depense.price));
-            updateDataChart();
+           
           }
         }
 
         localStorage.setItem(expenseListLabel, JSON.stringify(arrayExpense));
         this.getExpenseTolocaStorage(arrayExpense);
+        this.getExpenseTolocaStorageHistory(arrayExpense)
+        Mychart();
 
-        /* tr = this.clone.querySelectorAll('tr');  */
+        
 
-        /*  for(let i = 0; i < tr.length; i++){
-                    console.log(this.expense_name.value);
-                    if(tr[i].children[0].innerHTML.includes(this.expense_name.value)){
-                        tr[i].children[1].innerHTML = +this.expense_amount.value + +tr[i].children[1].innerHTML;
-                    }else{
-                        td[0].innerText = this.expense_name.value;
-                        td[1].innerText = this.expense_amount.value;
-                        this.tbody.appendChild(this.clone);
-                    }
-                } */
-        /* console.log(+e.target.closest('tr').children[0].innerText);
-                console.log(this.tbody.appendChild(this.clone)); */
-
-        /* totalBalance = totalBalance - totalExpense;
-                localStorage.setItem('balance', JSON.stringify(totalBalance));
-                this.showExpense.innerHTML = totalExpense;
-                this.showBlance.innerHTML = totalBalance; */
 
         this.expense_name.value = "";
         this.expense_amount.value = "";
@@ -302,24 +252,10 @@ class BudgetApp {
       }
     }
   }
-  /* deleteExpense(e){
-        if(e.target.classList.contains('fa-trash')){
-            this.showBlance.innerText = +this.showBlance.innerText + +e.target.closest('tr').children[1].innerText;
-            this.showExpense.innerText = +this.showExpense.innerText - + e.target.closest('tr').children[1].innerText;
-            e.target.closest('tr').remove();
-            console.log(e.target.closest('tr'));
-
-             arrayExpense = arrayExpense.map() 
-        }
-    }
-     */
+ 
   editExpense(e) {
     console.log(e.target);
     if (e.target.classList.contains("fa-edit")) {
-      /* this.tr = document.querySelectorAll("#tr");
-            const index = this.tr.parentE */
-      /* this.expense_update.style.display = "block";
-            this.expense_add.style.display = "none"; */
       this.showBlance.innerText =
         +this.showBlance.innerText +
         +e.target.closest("tr").children[1].innerText;
@@ -337,50 +273,25 @@ class BudgetApp {
     }
   }
   history() {
-    this.history_table.style.display = "block";
+    
+    let result = this.historyTable.classList.toggle("none");
+   if(result){
+    this.historyTable.style.display = "block";
+   }else{
+    this.historyTable.style.display = "none";
+   }
   }
-  /* update(e){
-        if(e.target.closest('tr').children[0].innerText === this.expense_name.value){
-            this.showBlance.innerText = +this.showBlance.innerText + +e.target.closest('tr').children[1].innerText;
-            this.showExpense.innerText = +this.showExpense.innerText - + e.target.closest('tr').children[1].innerText;
-
-            this.expense_name.value = e.target.closest('tr').children[0].innerText;
-            this.expense_amount.value = +e.target.closest('tr').children[1].innerText
-            e.target.closest('tr').remove();
-        }
-    } */
+  
 }
 
-/* var budget;
-const object_data = {
-  budget_amount: 0,
-  total_expenses: 0,
-  balance: 0,
-  expenses: []
-};
- */
-/* INITIALIZE LOCAL-STORAGE */
-/* if (localStorage.getItem("budget")) {
-  budget = JSON.parse(localStorage.getItem("budget"));
-  setValues();
-} else {
-  localStorage.setItem("budget", JSON.stringify(object_data));
-  budget = object_data;
-} */
+
 function deleteExpense(index) {
   arrayExpense.splice(index, 1);
   localStorage.setItem(expenseListLabel, JSON.stringify(arrayExpense));
+  
   location.reload();
+  
 }
-
-/* function editExpense(index){
-   
-    
-    
-
-    localStorage.setItem(expenseListLabel, JSON.stringify(arrayExpense));
-    
-} */
 
 function color() {
   let colore = "0123456789ABCDEF";
@@ -391,34 +302,47 @@ function color() {
   return Htag;
 }
 
-/* let i = 0; */
-/* let chartVar; */
 
-const ctx = document.getElementById("myChart");
 
-/* if (chartVar) {
-    chartVar.destroy();
-  }
- */
-/* const  chartVar = new Chart(ctx, {
+
+
+  const ctx = document.getElementById("myChart");
+
+  let chartVar = new Chart(ctx, {
     type: "doughnut",
     data: {
-      labels: arrayLabels,
+      labels: [],
       datasets: [
         {
-          data: arrayData,
-          backgroundColor: arrColor,
+          data: [],
+          backgroundColor: [],
           borderWidth: 0,
         },
       ],
     },
-    option: {
-      circumference: 360,
-      rotation: 360,
-      cutout: 0,
-    },
-  }); */
-/*  i++; */
+  
+  });  
+
+  
+  function Mychart(){
+    //chart
+    let arr = arrayExpense;
+    console.log(arr);
+    console.log(arrayExpense);
+    chartVar.data.labels = [];
+    chartVar.data.datasets[0].data = [];
+    chartVar.data.datasets[0].backgroundColor = [];
+  
+    arr.forEach((item) =>{
+      chartVar.data.labels.push(item.name);
+        chartVar.data.datasets[0].data.push(item.price);
+        chartVar.data.datasets[0].backgroundColor.push(color());
+        chartVar.update();
+        
+    })
+  }
+  Mychart()
+
 
 document.addEventListener("DOMContentLoaded", init);
 
@@ -437,14 +361,14 @@ function init() {
   );
   begin.getExpenseTolocaStorage(arrayExpense);
 
-
-  const history = new BudgetApp(
+/* 
+   const history = new BudgetApp(
     add_budgetBtn,
     expense_addBtn,
     table,
     btnClear,
     btnHistory
   );
-  history.getExpenseTolocaStorageHistory(arrayExpense);
+  history.getExpenseTolocaStorageHistory(arrayExpense);  */
 }
 
